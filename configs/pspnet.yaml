@@ -1,0 +1,46 @@
+# =========================================================
+# FCN8s Inference Configuration (Sonar Substrate Segmentation)
+# =========================================================
+
+# --- Model settings ---
+model: pspnet
+backbone: resnet50           # FCN8s is typically used with VGG16 in awesome-seg
+aux: false                # no auxiliary loss head needed for inference
+
+# --- Dataset settings ---
+dataset: substrate
+
+# Root directory of the test dataset
+# This should point to the folder used by get_segmentation_dataset(..., split='test')
+data_root: ../test_images
+
+# Number of classes (including background = 0)
+num_classes: 5
+
+confusion_matrix_dir: ../confusion_matrix
+
+# --- Dataloader ---
+workers: 4
+
+# --- Device ---
+no_cuda: false            # set true to force CPU
+
+# --- Logging ---
+log_dir: ../test_log_results
+
+# --- Prediction saving ---
+save_pred: true
+pred_outdir: ../runs/pspnet
+
+# --- Input preprocessing (must match training) ---
+input:
+  to_grayscale: true      # your sonar images are grayscale
+  to_rgb: false           # set true ONLY if you convert gray -> 3 channels
+  normalize:
+    mean: [0.485]         # matches your eval.py: Normalize([.485], [.229])
+    std:  [0.229]
+
+# --- Tiling / patch inference ---
+inference:
+  patch_size: 1024
+  overlap: 0
